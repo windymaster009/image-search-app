@@ -29,7 +29,7 @@ function App() {
 
   const handleSearch = async () => {
     const fileName = query.toLowerCase().replace(/\s+/g, ''); // Normalize the query
-    const filePath = `/assets/${fileName}.pdf`;
+    const filePath = `${process.env.PUBLIC_URL}/assets/${fileName}.pdf`;
   
     setMessage('');
     setError('');
