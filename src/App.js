@@ -15,52 +15,46 @@ function App() {
     ];
 
     let index = 0;
-
-    // Set the first background image
-    setBackgroundImage(images[index]);
+    setBackgroundImage(images[index]); // Set first image
 
     const interval = setInterval(() => {
       index = (index + 1) % images.length; // Cycle through images
       setBackgroundImage(images[index]);
-    }, 5000); // Change image every 5 seconds
+    }, 5000);
 
-    return () => clearInterval(interval); // Clean up interval
+    return () => clearInterval(interval); // Clean up
   }, []);
 
   const handleSearch = async () => {
-    const fileName = query.toLowerCase().replace(/\s+/g, ''); // Normalize the query
+    const fileName = query.toLowerCase().replace(/\s+/g, ''); // Normalize query
     const filePath = `${process.env.PUBLIC_URL}/assets/${fileName}.pdf`;
-  
+
     setMessage('');
     setError('');
-  
+
     try {
-      const response = await fetch(filePath, { method: 'GET' });
-  
+      console.log('Checking file path:', filePath); // Debugging
+
+      // Check if the file exists using HEAD request
+      const response = await fetch(filePath, { method: 'HEAD' });
+
       if (!response.ok) {
-        throw new Error('File not found'); // Properly handle the 404
+        throw new Error('File not found');
       }
-  
-      // File exists, start download
-      setMessage('Please wait, downloading...');
+
+      // File exists, proceed with download
+      setMessage('Downloading file...');
       const link = document.createElement('a');
       link.href = filePath;
       link.download = `${fileName}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-  
-      setDownloadStatus((prev) => ({
-        ...prev,
-        [`${fileName}.pdf`]: 'Downloaded',
-      }));
-    } catch (error) {
-      setError('NOTE: The system will download the file for you is there a name in it'); // Set error message
-      console.error('Error:', error.message);
+    } catch (err) {
+      setError('Error: File not found. Please check the name and try again.');
+      console.error(err.message);
     }
   };
-  
-  
 
   return (
     <div className="App" style={{ backgroundImage: `url(${backgroundImage})` }}>
@@ -83,6 +77,3 @@ function App() {
 }
 
 export default App;
-
-
-
