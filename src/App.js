@@ -35,7 +35,7 @@ function App() {
     setError('');
   
     try {
-      const response = await fetch(filePath, { method: 'HEAD' });
+      const response = await fetch(filePath, { method: 'GET' });
   
       if (!response.ok) {
         throw new Error('File not found'); // Properly handle the 404
